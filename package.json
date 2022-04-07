@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
+  "name": "yougotanitem",
+  "description": "random_bullshit@random_bullshit.com thought you'd be interested in this item!",
+  "main": "yougotanitem.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "AlekEagle",
+  "license": "ISC"
+}
