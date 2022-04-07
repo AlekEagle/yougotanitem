@@ -1,9 +1,11 @@
-'use strict';
-
 const argv = process.argv;
 
-module.exports = () => {
-  let out = { command: argv[0], args: [], flags: {} };
+export default function parseArgs() {
+  let out: {
+    command: string;
+    args: string[];
+    flags: { [key: string]: string };
+  } = { command: argv[0], args: [], flags: {} };
 
   for (let i = 1; i < argv.length; i++) {
     if (argv[i].match(/^-[a-z0-9]$/)) {
@@ -27,4 +29,4 @@ module.exports = () => {
     } else out.args.push(argv[i]);
   }
   return out;
-};
+}
