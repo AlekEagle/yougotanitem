@@ -3,11 +3,7 @@ import { Worker } from 'worker_threads';
 import { readFile } from 'fs/promises';
 
 let successCount = 0;
-const args = parseArgs(),
-  count = args.flags.c || args.flags.count || '5',
-  email = args.flags.e || args.flags.email || '',
-  sku = args.flags.s || args.flags.sku || '206541015',
-  storeId = args.flags.S || args.flags.store || '2676';
+const args = parseArgs();
 
 const settings: {
   fromEmail: string;
@@ -43,22 +39,15 @@ Usage: yougotanitem email
     return;
   }
 
-  for (
-    let threads = 0;
-    threads <
-    (args.flags.t || args.flags.threads
-      ? parseInt(args.flags.t || args.flags.threads)
-      : 1);
-    threads++
-  ) {
+  for (let threads = 0; threads < settings.threads; threads++) {
     const worker = new Worker('./dist/worker.js', {
       workerData: {
-        fromEmail: email,
-        count,
-        sku: parseInt(sku),
-        storeId: parseInt(storeId),
+        fromEmail: settings.fromEmail,
+        count: settings.count,
+        sku: parseInt(settings.sku),
+        storeId: parseInt(settings.storeId),
         threadID: threads,
-        threadCount: threads,
+        threadCount: settings.threads,
         email: args.args[1]
       }
     });
@@ -66,12 +55,12 @@ Usage: yougotanitem email
       if (message.threadID === threads) {
         successCount++;
         console.log(
-          `${successCount} of ${count} or %${(
-            (successCount / parseInt(count)) *
+          `${successCount} of ${settings.count} or ${(
+            (successCount / settings.count) *
             100
           ).toFixed(2)}% emails sent`
         );
-        if (successCount === parseInt(count)) {
+        if (successCount === settings.count) {
           console.log(`${successCount} emails sent`);
           process.exit(0);
         }
