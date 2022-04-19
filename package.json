@@ -7,7 +7,8 @@
   "description": "random_bullshit@random_bullshit.com thought you'd be interested in this item!",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "author": "AlekEagle",
   "license": "ISC",
