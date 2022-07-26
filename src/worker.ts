@@ -2,12 +2,25 @@ import { workerData, parentPort } from 'worker_threads';
 
 import fetch from 'node-fetch';
 
-let threadID = workerData.threadID;
-let sendCount = Math.floor(workerData.count / workerData.threadCount);
-
-if (threadID === workerData.threadCount - 1) {
-  sendCount += workerData.count % workerData.threadCount;
-}
+let {
+  fromEmail,
+  count,
+  sku,
+  storeId,
+  threadID,
+  threadCount,
+  email,
+  successCount
+}: {
+  fromEmail: string | null;
+  count: number;
+  sku: number;
+  storeId: number;
+  threadID: number;
+  threadCount: number;
+  email: string;
+  successCount: number;
+} = workerData;
 
 function makeString(len: number): string {
   let str = '';
@@ -18,7 +31,7 @@ function makeString(len: number): string {
 }
 
 async function send() {
-  const email =
+  const fromAddress =
       workerData.fromEmail || `${makeString(10)}@${makeString(10)}.com`,
     res = await fetch('https://www.homedepot.com/p/svcs/sendProductEmail', {
       method: 'POST',
@@ -27,10 +40,10 @@ async function send() {
         'X-Requested-With': 'XMLHttpRequest'
       },
       body: JSON.stringify({
-        fromAddress: email,
-        toAddress: workerData.email,
-        sku: workerData.sku,
-        storeId: workerData.storeId
+        fromAddress,
+        toAddress: email,
+        sku: sku,
+        storeId: storeId
       })
     });
 
@@ -41,11 +54,19 @@ async function send() {
   }
 }
 
-for (let i = 0; i < sendCount; i++) {
+parentPort.on('message', (message: { successCount: number }) => {
+  successCount = message.successCount;
   try {
     await send();
   } catch (err) {
     console.error(err);
     process.exit(1);
   }
+});
+
+try {
+  await send();
+} catch (err) {
+  console.error(err);
+  process.exit(1);
 }
