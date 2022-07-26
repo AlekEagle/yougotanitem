@@ -54,15 +54,17 @@ async function send() {
   }
 }
 
-parentPort.on('message', async (message: { successCount: number }) => {
+parentPort.on('message', async (message: { successCount: number; threadID: number }) => {
   successCount = message.successCount;
   if (successCount === count)
-    process.exit(0)!
-  try {
-    await send();
-  } catch (err) {
-    console.error(err);
-    process.exit(1);
+    process.exit(0);
+  else if (message.threadID === threadID) {
+    try {
+      await send();
+    } catch (err) {
+      console.error(err);
+      process.exit(1);
+    }
   }
 });
 
