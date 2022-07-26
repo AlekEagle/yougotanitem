@@ -54,7 +54,7 @@ async function send() {
   }
 }
 
-parentPort.on('message', (message: { successCount: number }) => {
+parentPort.on('message', async (message: { successCount: number }) => {
   successCount = message.successCount;
   try {
     await send();
