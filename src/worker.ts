@@ -56,6 +56,8 @@ async function send() {
 
 parentPort.on('message', async (message: { successCount: number }) => {
   successCount = message.successCount;
+  if (successCount === count)
+    process.exit(0)!
   try {
     await send();
   } catch (err) {
