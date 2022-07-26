@@ -58,7 +58,7 @@ Usage: yougotanitem email
       if (message.threadID === threadID) {
         successCount++;
         allWorkers.forEach(w => {
-          w.postMessage({ successCount });
+          w.postMessage({ successCount, threadID: message.threadID });
         });
         console.log(
           `${successCount} of ${settings.count} or ${(
