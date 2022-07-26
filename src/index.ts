@@ -4,6 +4,7 @@ import { readFile } from 'fs/promises';
 
 let successCount = 0;
 const args = parseArgs();
+let allWorkers: Array<Worker> = [];
 
 const settings: {
   fromEmail: string;
@@ -39,21 +40,26 @@ Usage: yougotanitem email
     return;
   }
 
-  for (let threads = 0; threads < settings.threads; threads++) {
+  function spawnThread(threadID: number) {
     const worker = new Worker('./dist/worker.js', {
       workerData: {
         fromEmail: settings.fromEmail,
         count: settings.count,
         sku: parseInt(settings.sku),
         storeId: parseInt(settings.storeId),
-        threadID: threads,
+        threadID,
         threadCount: settings.threads,
-        email: args.args[1]
+        email: args.args[1],
+        successCount
       }
     });
+    allWorkers[threadID] = worker;
     worker.on('message', (message: { threadID: number }) => {
-      if (message.threadID === threads) {
+      if (message.threadID === threadID) {
         successCount++;
+        allWorkers.forEach(w => {
+          w.postMessage({ successCount });
+        });
         console.log(
           `${successCount} of ${settings.count} or ${(
             (successCount / settings.count) *
@@ -72,8 +78,13 @@ Usage: yougotanitem email
     worker.on('exit', code => {
       if (code !== 0) {
         console.error(`Worker stopped with exit code ${code}`);
+        spawnThread(threadID);
       }
     });
+  }
+
+  for (let thread = 0; thread < settings.threads; thread++) {
+    spawnThread(thread);
   }
 }
 
