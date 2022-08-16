@@ -16,7 +16,7 @@ const settings: {
 } = {
   fromEmail: args.flags.e || args.flags.email || null,
   count: parseInt(args.flags.c || args.flags.count || '5'),
-  sku: args.flags.s || args.flags.sku || '206541015',
+  sku: args.flags.s || args.flags.sku || '316369949',
   storeId: args.flags.S || args.flags.store || '2676',
   threads: parseInt(args.flags.t || args.flags.threads || '1'),
   email: args.args[1]
@@ -33,7 +33,7 @@ Usage: yougotanitem email
   -h, --help        Show this help message
   -e, --email       Specify a specific email instead of random garbage.
   -c, --count       How many emails should be sent (default: 5).
-  -s, --sku         Specify the item shared (default: 206541015).
+  -s, --sku         Specify the item shared (default: 316369949).
   -S, --store       Specify the store the item comes from  (default: 2676).
   -t, --threads     How many threads to use (default: 1).`
     );
