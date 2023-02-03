@@ -1,8 +1,5 @@
 {
   "version": "2.0.0",
-  "dependencies": {
-    "node-fetch": "^3.2.3"
-  },
   "name": "yougotanitem",
   "description": "random_bullshit@random_bullshit.com thought you'd be interested in this item!",
   "main": "dist/index.js",
@@ -14,6 +11,6 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
-    "@types/node": "^17.0.23"
+    "@types/node": "^18.11.18"
   }
 }
